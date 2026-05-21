@@ -1,0 +1,21 @@
+[Unit]
+Description=Lianyu Flask Backend (gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/lianyu/backend
+EnvironmentFile=/var/www/lianyu/backend/.env
+ExecStart=/var/www/lianyu/backend/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 127.0.0.1:5000 \
+    --access-logfile /var/log/lianyu/access.log \
+    --error-logfile /var/log/lianyu/error.log \
+    app:app
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

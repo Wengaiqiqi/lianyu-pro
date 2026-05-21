@@ -1,0 +1,1 @@
+import{ac as e}from"./index-DG1zMxMw.js";function o(){return e.get("/categories")}function n(){return e.get("/categories/admin")}function g(){return e.get("/categories/flat")}function i(t){return e.post("/categories",t)}function s(t,r){return e.put(`/categories/${t}`,r)}function u(t){return e.delete(`/categories/${t}`)}export{g as a,n as b,i as c,u as d,o as g,s as u};

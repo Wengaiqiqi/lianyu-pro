@@ -1,0 +1,1 @@
+import{ac as t}from"./index-DG1zMxMw.js";function r(){return t.get("/ai/interests")}function s(){return t.post("/ai/interests/analyze",null,{timeout:6e5})}function u(e,a){return t.post("/ai/evaluate-url",{url:e,title:a},{timeout:3e4})}export{s as a,u as e,r as g};

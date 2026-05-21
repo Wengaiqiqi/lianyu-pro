@@ -1,0 +1,1157 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+\usepackage[left=2.5cm,right=2.0cm,top=2.5cm,bottom=2.0cm]{geometry}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{chngcntr}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ragged2e}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.misc,fit,calc}
+
+\IfFontExistsTF{Times New Roman}{setmainfont{Times New Roman}}{setmainfont{TeX Gyre Termes}}
+\hypersetup{hidelinks}
+\graphicspath{{.}}
+\setlength{parindent}{2em}
+\linespread{1.25}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\setlength{emergencystretch}{3em}
+\sloppy
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\newcommand{\thesistitlecn}{基于Python的在线网址收藏管理平台的设计与实现}
+\renewcommand{\contentsname}{目qquad 录}
+
+\AtBeginDocument{\songti}
+
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\renewcommand{\thefigure}{\thesection-\arabic{figure}}
+\renewcommand{\thetable}{\thesection-\arabic{table}}
+
+\DeclareCaptionFont{figcapfont}{\zihao{5}\kaishu}
+\DeclareCaptionFont{tabcapfont}{\zihao{4}songtibfseries}
+\captionsetup[figure]{
+  name=图,
+  font={figcapfont,stretch=1.25},
+  labelfont={figcapfont},
+  textfont={figcapfont},
+  justification=\centering,
+  singlelinecheck=false,
+  skip=6pt
+}
+\captionsetup[table]{
+  name=表,
+  font={tabcapfont,stretch=1.25},
+  labelfont={tabcapfont},
+  textfont={tabcapfont},
+  justification=\centering,
+  singlelinecheck=false,
+  skip=6pt
+}
+
+\titleformat{section}{centeringzihao{3}heitibfseries}{\thesection}{0.8em}{}
+\titleformat{subsection}{\zihao{4}heitibfseries}{\thesubsection}{0.5em}{}
+\titleformat{subsubsection}{\zihao{-4}heitibfseries}{\thesubsubsection}{0.5em}{}
+\titlespacing{section}{0pt}{0pt}{15.6pt}
+\titlespacing{subsection}{0pt}{7.8pt}{7.8pt}
+\titlespacing{subsubsection}{0pt}{7.8pt}{7.8pt}
+
+\newcommand{\placeholder}[1]{
+  \fbox{
+    \parbox[c][5cm][c]{0.82textwidth}{
+      \centering
+      #1
+    }
+  }
+}
+
+% 截图统一插入命令：限制最大高度，避免 Overleaf 因图片过大或浮动体过高而超时
+\newcommand{\screenshotfig}[3]{
+\begin{figure}[H]
+\centering
+\IfFileExists{#1}{
+    \includegraphics[width=#2textwidth,height=0.46textheight,keepaspectratio]{#1}
+}{
+    placeholder{#3}
+}
+\caption{#3}
+\end{figure}
+}
+
+\newcommand{\checkedbox}{$blacksquare$}
+\tikzset{
+  archbox.style={draw, rounded corners=3pt, align=center, minimum height=1.2cm, text width=2.5cm, fill=black!3},
+  layerbox.style={draw, rounded corners=4pt, align=center, minimum height=1.5cm, text width=11.8cm, fill=black!2},
+  entity.style={draw, rounded corners=2pt, align=center, minimum width=2.4cm, minimum height=0.9cm, fill=black!3},
+  relation.style={draw, diamond, aspect=1.8, align=center, inner sep=1pt, fill=black!6},
+  flow.style={draw, rounded corners=3pt, align=center, minimum height=0.95cm, text width=2.3cm, fill=black!3},
+  line.style={-{Latex[length=2.6mm]}, thick},
+  thinline.style={-{Latex[length=2mm]}, semithick}
+}
+
+\begin{document}
+
+% =========================
+% 封面
+% =========================
+\begin{titlepage}
+    \thispagestyle{empty}
+    \vspace{0.6cm}
+
+    \noindent
+    \begin{minipage}[t]{0.30textwidth}
+        \raggedright
+        {\zihao{4}\heiti 2026届}
+    \end{minipage}
+    \begin{minipage}[t]{0.70textwidth}
+        \raggedleft
+        {\zihao{4}\heiti
+        \begin{tabular}{@{}rl@{}}
+            分类号： & TP311 
+            [0.35cm]
+            单位代码： & 10452
+        \end{tabular}\par}
+    \end{minipage}
+
+    \vspace{1.8cm}
+
+    \begin{center}
+        \IfFileExists{image.png}{
+            \includegraphics[width=0.40textwidth]{image.png}\par
+        }{
+            \fbox{parbox[c][1.4cm][c]{0.40textwidth}{\centering 临沂大学校名字样图片未找到}}
+        }
+    \end{center}
+
+    \vspace{0.9cm}
+
+    \begin{center}
+        {\zihao{1}heitibfseries 毕业论文（设计）\par}
+    \end{center}
+
+    \vspace{1.6cm}
+
+    \begin{center}
+        {\zihao{3}\heiti thesistitlecnpar}
+    \end{center}
+
+    \vspace{1.4cm}
+
+    \begin{center}
+    {\zihao{4}\heiti
+    \renewcommand{\arraystretch}{1.8}
+    \begin{tabular}{p{1.8cm}p{6.4cm}}
+        姓hspace{1em}名 & \underline{\makebox[6.1cm][c]{杨永坤}} 
+        学hspace{1em}号 & \underline{\makebox[6.1cm][c]{202209080105}} 
+        年hspace{1em}级 & \underline{\makebox[6.1cm][c]{2022}} 
+        专hspace{1em}业 & \underline{\makebox[6.1cm][c]{软件工程}} 
+        学hspace{1em}院 & \underline{\makebox[6.1cm][c]{信息科学与工程}} 
+        指导教师 & \underline{\makebox[6.1cm][c]{王永芳}} 
+    \end{tabular}\par}
+    \end{center}
+
+    \vfill
+
+    \begin{center}
+        {\zihao{4}\heiti 2026年4月}
+    \end{center}
+\end{titlepage}
+
+% =========================
+% 原创性声明
+% =========================
+\clearpage
+\thispagestyle{empty}
+\begin{center}
+    {\zihao{2}heitibfseries 学位论文原创性声明}
+\end{center}
+
+\vspace{1cm}
+
+郑重声明：所呈交的学位论文《基于Python的在线网址收藏管理平台的设计与实现》，是在指导教师指导下独立完成的研究成果。除文中已经注明引用的内容外，本论文不包含任何他人已经发表或撰写过的研究成果，也不包含为获得其他教育机构学位或证书而使用过的材料。对本文研究做出贡献的个人和集体，均已在文中以明确方式标明。本人完全意识到本声明的法律后果，并愿意承担由此引起的全部责任。
+
+\vspace{3cm}
+
+\begin{flushright}
+学位论文作者签名：\underline{\hspace{4cm}}[1cm]
+日期：2026年underline{\hspace{1cm}}月underline{\hspace{1cm}}日
+\end{flushright}
+
+% =========================
+% 授权书
+% =========================
+\clearpage
+\thispagestyle{empty}
+\begin{center}
+    {\zihao{2}heitibfseries 学位论文版权使用授权书}
+\end{center}
+
+\vspace{1cm}
+
+本学位论文作者完全了解学校有关保留、使用学位论文的规定，同意学校保留并向国家有关部门或机构送交论文的复印件和电子版，允许论文被查阅和借阅。本人授权临沂大学将本学位论文的全部或部分内容编入有关数据库进行检索，可以采用影印、缩印或扫描等复制手段保存和汇编本学位论文。
+
+\vspace{1cm}
+
+\noindent 本学位论文属于[0.6em]
+\noindent 保quad 密$square$，在underline{\hspace{1.5cm}}年解密后适用本授权书。[0.3em]
+\noindent 不保密checkedbox。
+
+\vspace{2.5cm}
+
+\noindent 学位论文作者签名：\underline{\hspace{3.8cm}} hfill 指导教师签名：\underline{\hspace{3.8cm}}
+
+\vspace{1cm}
+
+\noindent 日期：2026年underline{\hspace{0.8cm}}月underline{\hspace{0.8cm}}日 hfill 日期：2026年underline{\hspace{0.8cm}}月underline{\hspace{0.8cm}}日
+
+% =========================
+% 中文摘要
+% =========================
+\clearpage
+\pagenumbering{Roman}
+\setcounter{page}{1}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{-5}\songti 中文摘要}
+\cfoot{\thepage}
+\begin{center}
+    {\zihao{3}heitibfseries thesistitlecnpar}
+    \vspace{0.6cm}
+    {\zihao{3}heitibfseries 摘quad 要}
+\end{center}
+
+{\zihao{-4}\songti
+在互联网信息规模快速增长的背景下，用户对网页收藏、分类整理、跨设备访问以及内容检索的需求不断增强。传统浏览器收藏夹主要承担静态保存功能，缺乏系统化分类、公开共享、行为统计和智能辅助等能力，难以满足用户在个人知识管理与轻社交传播场景下的实际使用需求。针对上述问题，本文设计并实现了一套基于 Python 的在线网址收藏管理平台，以提高网址资源管理效率、增强内容组织能力，并探索 AI 技术在网址收藏服务领域中的应用价值。
+
+本系统采用前后端分离架构，前端基于 Vue 3、Vue Router、Pinia、Element Plus 和 ECharts 实现用户端与管理端界面；后端基于 Python Flask、Flask-SQLAlchemy 与 Flask-JWT-Extended 构建 REST 风格接口，数据库采用 MySQL。围绕实际应用需求，系统实现了用户注册登录、个人书签管理、树形分类管理、公开书签展示、热门榜单、搜索功能、访问统计、用户关注与点赞、后台审核治理、日志记录、AI 设置以及双向会话式反馈等功能模块。针对传统反馈系统交互单向、进度不可追踪的问题，本文进一步设计了由反馈主体与消息记录组成的会话式反馈模型，形成用户与管理员之间的闭环沟通机制。
+
+系统实现结果表明，该平台能够较好地完成网址采集、组织、共享、统计与智能辅助分析等核心任务，兼顾了课程设计中的工程完整性与后续扩展能力。测试结果表明，各主要功能模块运行稳定，认证流程、书签管理、反馈会话以及数据库持久化能力均能够满足预期要求。本文所实现的平台为在线网址收藏管理系统的构建提供了一种可落地的设计方案，也为后续在推荐算法、全文检索和消息推送等方向的拓展奠定了基础。
+
+\vspace{0.8cm}
+\noindent{\zihao{4}\heiti 关键词：}{\zihao{-4}\songti 在线网址收藏；Python；Flask；Vue 3；前后端分离；会话式反馈}
+}
+
+% =========================
+% 英文摘要
+% =========================
+\clearpage
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{-5}\rmfamily ABSTRACT}
+\cfoot{\thepage}
+\begin{center}
+    {\zihao{3}rmfamilybfseries DESIGN AND IMPLEMENTATION OF AN ONLINE URL COLLECTION MANAGEMENT PLATFORM BASED ON PYTHONpar}
+    \vspace{0.6cm}
+    {\zihao{3}rmfamilybfseries ABSTRACT}
+\end{center}
+
+{\zihao{-4}\rmfamily
+With the rapid growth of Internet information, users increasingly demand efficient web URL collection, hierarchical classification, cross-device access, content retrieval, and intelligent assistance. Traditional browser bookmarks mainly provide static storage functions and generally lack systematic organization, public sharing, behavioral analytics, and intelligent support. Therefore, they are insufficient for personal knowledge management and lightweight social sharing scenarios. To address these issues, this paper designs and implements an online URL collection management platform based on Python, aiming to improve the efficiency of URL organization and explore the value of AI-enhanced web information services.
+
+The system adopts a front-end and back-end separated architecture. The front end is built with Vue 3, Vue Router, Pinia, Element Plus, and ECharts to provide both user-side and administrator-side interfaces. The back end is developed with Python Flask, Flask-SQLAlchemy, and Flask-JWT-Extended to provide REST-style APIs. MySQL is used as the database of the system. According to the practical requirements of the project, the system implements user registration and login, personal bookmark management, tree-structured category management, public bookmark display, ranking list, global search, access statistics, user follow and like functions, administrator review and governance, operation logging, AI configuration, and a bidirectional conversational feedback module.
+
+Experimental use and functional testing show that the system can effectively support URL collection, organization, sharing, statistics, and intelligent assistance while maintaining good extensibility and engineering completeness. The test results indicate that the authentication flow, bookmark management, feedback conversation, and database persistence functions all meet the expected requirements. The implemented system provides a feasible solution for online URL collection platforms and lays a foundation for future work in recommendation algorithms, full-text retrieval, and real-time notification services.
+
+\vspace{0.8cm}
+\noindent{\zihao{4}rmfamilybfseries KEY WORDS }{\zihao{-4}\rmfamily online URL collection; Python; Flask; Vue 3; front-end and back-end separation; conversational feedback}
+}
+
+% =========================
+% 目录
+% =========================
+\clearpage
+\pagestyle{empty}
+\tableofcontents
+\clearpage
+\pagenumbering{\arabic}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{-5}\songti \thesistitlecn}
+\cfoot{\thepage}
+
+\section{绪论}
+
+\subsection{研究背景}
+随着互联网内容的持续扩张，用户在学习、工作和日常生活中会接触到大量分散的网页资源，如技术文档、新闻资讯、工具站点、学术资料以及各类媒体内容。这些网页往往具有较高的复用价值，因此用户通常依赖浏览器收藏夹对重要链接进行保存。然而，传统收藏夹的设计重点主要在于“存储”，而不是“管理”与“服务”，在面对信息量大、使用周期长、分类层级复杂的场景时，常常暴露出分类混乱、检索低效、跨设备迁移困难以及内容价值挖掘不足等问题。
+
+与此同时，Web 应用的发展趋势已从单纯的信息展示转向集成化、智能化与服务化。一方面，前后端分离架构和组件化开发提升了系统的交互体验与可维护性；另一方面，大语言模型和内容分析接口的应用，使基于用户历史行为进行兴趣标签提取、关键词生成和推荐服务成为可能。因此，将传统网址收藏管理功能与公开分享、行为统计和反馈沟通能力相结合，构建具备实用价值与工程完整性的在线网址收藏管理平台，具有较强的现实意义。
+
+\subsection{国内外研究现状}
+国外在个人知识管理、社交书签与内容推荐领域起步较早，曾出现 Delicious、Pocket、Raindrop.io 等工具型产品。这类系统在跨设备同步、标签化组织和内容收集体验方面积累了较多经验，但多数产品偏向平台化服务，二次定制成本较高，且不适合作为教学场景中的完整工程实践对象。近年来，一些系统开始引入推荐算法和内容摘要，但对于可解释的管理后台、审核治理以及面向课程设计的可实现性支持相对有限。
+
+国内在收藏管理类系统的研究更多集中于信息管理、资源分类和后台管理平台实现，常见技术路线包括 Spring Boot、Vue、MySQL 等。部分系统强调文件管理、课程资源管理或企业资料管理，但围绕“网址收藏”这一细分场景，同时覆盖用户端、公开展示、排行榜、轻社交、行为统计、审核机制、AI 辅助与反馈闭环的综合型设计仍相对较少。
+
+\subsection{研究内容}
+本文围绕“在线网址收藏管理平台”的设计与实现展开研究，主要工作包括以下几个方面：
+
+\begin{enumerate}[label=\arabic.]
+    \item 分析传统浏览器收藏夹和一般书签工具在分类、检索、共享和扩展能力方面的不足，明确系统建设目标。
+    \item 基于前后端分离思想设计系统总体架构，构建用户端与管理员端双界面协同模式。
+    \item 设计用户、书签、分类、访问记录、用户关系、反馈会话和 AI 配置等核心数据模型。
+    \item 实现注册登录、权限控制、书签采集、树形分类、公开展示、排行榜、社交互动和后台审核等基础业务功能。
+    \item 设计并实现会话式反馈模块，支持用户与管理员之间的多轮交互与状态追踪。
+    \item 对系统进行功能测试与场景验证，并总结系统的不足与后续优化方向。
+\end{enumerate}
+
+\subsection{研究意义}
+本课题的研究意义主要体现在三个层面。首先，在应用层面，系统针对真实用户在网页信息管理中的痛点提出解决方案，提升了网址资源的组织效率与二次利用价值。其次，在工程层面，系统融合了现代 Web 开发的主流技术栈，并实现用户端、后台端、MySQL 持久化存储和 AI 服务接入的协同设计，具备较好的课程设计示范价值。最后，在研究层面，本文将会话式反馈引入网址收藏管理场景，使系统不再停留在单向工具层面，而是形成以内容组织、行为分析、智能辅助和沟通闭环为特征的综合型平台。
+
+
+\subsection{论文组织结构}
+为保证论文内容叙述具有较强的层次性，本文按照“问题提出、技术支撑、需求分析、系统设计、系统实现、系统测试与总结展望”的思路展开。第一章主要介绍课题背景、研究现状、研究内容和研究意义，说明在线网址收藏管理平台建设的必要性。第二章对系统开发过程中涉及的主要技术进行说明，包括前后端分离架构、Vue 3 生态、Python Flask 后端框架、数据库技术以及 AI 服务接入方式。第三章从可行性、功能需求、非功能需求和用户角色等方面对系统进行分析，为后续设计提供依据。第四章重点描述系统总体架构、功能模块、数据库模型、关键表结构和业务流程。第五章结合实际页面截图，对用户端和管理员端的主要功能实现进行说明。第六章从测试环境、测试方法和测试用例等方面验证系统功能。最后一章总结全文工作，指出系统不足，并提出后续优化方向。
+
+这样的组织方式既能够体现软件工程项目从需求分析到编码实现再到测试验证的完整过程，也能够使读者较清晰地理解系统各部分之间的关联关系。由于本系统同时包含普通用户端和管理员端，若仅从单一页面角度叙述，容易造成模块割裂。因此，论文在系统设计章节先给出总体结构和数据模型，再在系统实现章节按用户使用流程与后台管理流程展开，尽量保持技术说明与业务说明之间的一致性。
+
+\clearpage
+\section{系统技术介绍}
+
+\subsection{前后端分离架构}
+本系统采用前后端分离开发模式。前端作为独立应用负责页面呈现、交互控制与状态管理；后端主要提供 REST 风格接口、业务逻辑处理与数据库访问服务。该模式能够降低界面层与业务层的耦合程度，使开发、调试、部署与后续扩展更加灵活，也便于用户端与管理端共享统一的数据接口。
+
+\subsection{前端技术}
+\subsubsection{Vue 3}
+Vue 3 是当前主流的渐进式前端框架，具有响应式数据驱动、组件化开发和生态完善等特点。本文使用 Vue 3 构建用户首页、个人中心、书签管理、分类管理、公开广场、热门榜单、反馈中心和管理员后台等页面，实现复杂业务界面的模块化组织。
+
+\subsubsection{Vue Router 与 Pinia}
+Vue Router 用于实现系统路由组织和前端权限控制。系统划分为普通用户路由空间和管理员路由空间，配合路由守卫实现登录校验、访客页面限制以及管理员权限拦截。Pinia 负责管理 token、当前用户信息、角色状态和未读反馈数量等全局数据，保证跨页面状态一致性。
+
+\subsubsection{Element Plus 与 ECharts}
+Element Plus 为表单录入、弹窗、表格、分页、树控件和消息提示等交互提供稳定的组件支持。ECharts 用于后台统计与趋势展示，使系统具备可视化分析能力。
+
+\subsection{后端技术}
+\subsubsection{Python Flask}
+Flask 是轻量级 Python Web 框架，具备结构灵活、学习成本低、扩展方便等特点，适合中小型系统与教学项目开发。本文采用 Flask 作为后端基础框架，通过蓝图机制划分认证、书签、分类、用户、管理员和 AI 等业务模块。
+
+\subsubsection{Flask-SQLAlchemy}
+Flask-SQLAlchemy 提供 ORM 映射能力，使开发者能够以对象形式操作数据库，降低 SQL 编写成本，提高模型维护效率。系统中的用户、书签、分类、反馈、访问记录和社交关系等实体均通过 ORM 模型定义。
+
+\subsubsection{Flask-JWT-Extended}
+JWT 鉴权机制能够支持前后端分离场景下的无状态认证。系统在用户登录成功后签发令牌，前端持久化保存并在访问受限接口时携带该令牌，后端对其进行解析与校验，从而完成身份认证与权限控制。
+
+\subsection{数据库技术}
+系统采用 MySQL 作为关系型数据库。MySQL 具有成熟稳定、生态完善、并发支持较好和维护工具丰富等特点，能够满足用户信息、书签数据、访问记录、反馈消息以及统计信息等多类业务数据的长期持久化需求。
+
+\subsection{AI 服务接入技术}
+系统在 AI 模块中采用可配置方式接入外部模型服务，通过配置 API 地址、密钥和模型名称实现智能分析功能。后端将书签标题、URL、描述等信息组装为提示词，并请求模型返回结构化结果，再经解析后存入业务数据表或直接返回给前端界面展示。
+
+
+\subsection{开发环境与运行环境}
+系统开发过程中需要同时维护前端工程、后端服务和数据库环境，因此开发环境的配置会直接影响系统调试效率。前端部分基于 Node.js 与 Vite 构建，开发阶段通过热更新机制快速预览页面变化；后端部分基于 Python 虚拟环境安装 Flask 及相关依赖，能够避免不同项目之间的依赖冲突；数据库部分使用 MySQL 保存结构化业务数据，并通过 ORM 模型与后端代码进行映射。
+
+\begin{table}[H]
+\centering
+\caption{系统开发与运行环境说明}
+\begin{tabular}{p{3.2cm}p{4.2cm}p{6cm}}
+\toprule
+环境类别 & 主要工具 & 作用说明 
+\midrule
+前端开发环境 & Node.js、Vite、Vue 3 & 负责前端项目构建、页面热更新和组件化开发 
+后端开发环境 & Python、Flask、虚拟环境 & 负责接口服务、业务逻辑和第三方库依赖隔离 
+数据库环境 & MySQL & 负责用户、书签、分类、反馈、日志等数据持久化 
+接口通信方式 & HTTP、JSON、Axios & 负责前后端之间的数据请求与响应处理 
+浏览器环境 & Chrome、Edge & 用于页面联调、功能验证和兼容性检查 
+\bottomrule
+\end{tabular}
+\end{table}
+
+在实际开发中，前端页面与后端接口可以分别启动。前端通过 Axios 配置统一的请求前缀，后端通过 CORS 允许本地开发域名访问接口。为了保证环境可迁移性，数据库连接地址、JWT 密钥和 AI 服务参数均适合放入配置文件或环境变量中管理，避免硬编码在业务代码中。这样的处理方式有利于后续将系统部署到服务器，也便于根据不同环境切换开发配置和生产配置。
+
+\subsection{前后端接口通信机制}
+前后端分离系统的核心在于接口通信。本系统前端不直接操作数据库，而是通过 Axios 向 Flask 后端发送请求。后端接收到请求后，首先进行参数校验和身份验证，然后调用业务逻辑处理数据，最后以 JSON 格式返回结果。对于需要登录才能访问的接口，前端会在请求头中携带 JWT 令牌，后端通过解析令牌确认当前用户身份。
+
+接口返回格式在系统中保持相对统一，一般包括状态码、提示信息和业务数据。统一的响应结构能够降低前端处理复杂度，使页面组件能够根据返回状态显示成功提示、错误提示或重新登录提示。对于分页列表类接口，返回结果中还会包含总数、当前页码和列表数据，便于前端表格组件进行分页渲染。对于图表统计类接口，后端会将数据转换为适合 ECharts 使用的数组结构，从而减少前端二次加工成本。
+
+\subsection{系统安全相关技术}
+系统安全设计主要体现在账号认证、密码存储、权限控制和内容治理等方面。用户密码不以明文形式保存，而是经过哈希处理后写入数据库；用户登录后由后端签发 JWT 令牌，前端在访问受保护接口时携带令牌；管理员接口除要求用户登录外，还需要验证角色字段是否为管理员；公开内容在展示前可以经过审核或屏蔽处理，从而降低异常链接传播风险。
+
+此外，系统在 URL 管理场景下还需要关注链接本身的安全性。用户提交的网址可能存在非法协议、钓鱼页面或无效地址，因此后端在保存与公开展示时应进行必要的格式校验。对于已经公开的网址，管理员可以在内容管理模块中进行屏蔽或删除。通过用户侧约束与管理员侧治理相结合，系统能够在保证用户使用自由度的同时，维持公开内容空间的基本秩序。
+
+\clearpage
+\section{系统分析}
+
+\subsection{可行性分析}
+\subsubsection{技术可行性}
+系统所选技术栈成熟稳定，Vue 3、Flask、SQLAlchemy、JWT 与 MySQL 均具备较多文档与实践案例支撑。项目规模适中，接口边界清晰，适合在课程设计周期内完成开发和测试。
+
+\subsubsection{经济可行性}
+系统主要依赖开源技术栈，开发工具与运行环境成本较低。AI 接口采用可配置方式接入，便于根据预算灵活启用或关闭，因此具有较好的经济可行性。
+
+\subsubsection{操作可行性}
+系统采用 Web 形式运行，用户无须额外安装客户端即可访问。普通用户主要通过导航栏、表格、树控件和表单完成操作，管理员通过后台页面完成审核、统计和配置维护，操作逻辑较为直观。
+
+\subsection{需求分析}
+\subsubsection{功能需求}
+根据项目定位，系统需要满足以下核心功能需求：
+
+\begin{enumerate}[label=\arabic.]
+    \item 用户注册、登录、退出及身份鉴权；
+    \item 书签的新增、编辑、删除、搜索与自动抓取；
+    \item 分类树的创建、调整、删除与统计；
+    \item 首页展示、公开广场、公开主页、热门榜单与搜索功能；
+    \item 用户之间的关注、点赞与公开传播；
+    \item 管理员对用户、公开内容、分类和日志的统一治理；
+    \item 基于 AI 的兴趣分析、关键词推荐、URL 安全评估与配置管理；
+    \item 用户与管理员之间的多轮反馈会话与消息追踪；
+    \item 基于 MySQL 的稳定数据持久化与业务数据管理支持。
+\end{enumerate}
+
+\subsubsection{非功能需求}
+除功能需求外，系统还需满足以下非功能需求：
+
+\begin{enumerate}[label=\arabic.]
+    \item 可维护性：前后端目录清晰，模块边界明确，便于后续扩展；
+    \item 可用性：界面交互简洁，普通用户能够快速完成书签管理；
+    \item 安全性：需要具备登录鉴权、角色区分、基础 URL 安全评估和内容审核能力；
+    \item 可扩展性：支持 AI 模块替换、统计能力增强以及更多通知渠道接入；
+    \item 兼容性：系统应在常见现代浏览器环境下稳定运行。
+\end{enumerate}
+
+\subsubsection{用户角色分析}
+系统主要包含三类访问状态：游客、普通用户和管理员。游客可以访问首页、登录与注册页面；普通用户可以进行网址收藏、分类管理、公开分享、排行榜查看和意见反馈；管理员可以进入后台进行用户管理、内容管理、分类维护、数据统计、操作日志、反馈管理、AI 设置和待处理审核等操作。
+
+在角色权限设计上，系统需要保证不同用户只能访问与自身身份相匹配的功能。游客不能进入个人中心、我的收藏和后台管理页面；普通用户只能管理自己的收藏、分类和反馈内容，不能修改其他用户数据；管理员则具有更高的治理权限，可以查看全站用户、公开内容、日志记录和审核信息。权限边界的划分能够避免数据越权访问，也是前后端分离系统中必须重点考虑的问题。
+
+从业务体验角度看，不同角色的页面入口也应具有差异。游客界面应突出注册和登录入口，降低第一次使用的理解成本；普通用户界面应突出收藏、搜索、分类和公开分享等高频操作；管理员界面应突出数据表格、筛选条件和批量处理入口，以提高日常维护效率。系统通过用户端顶部导航和后台侧边栏两种布局形式，分别服务于内容浏览和后台治理两类任务。
+
+
+\subsection{业务流程分析}
+在线网址收藏管理平台的业务流程可以分为用户使用流程和管理员治理流程。用户使用流程以账号登录为起点，用户完成身份认证后，可以进入个人中心查看统计信息，也可以在“我的收藏”中新增网址、修改分类或设置公开状态。当用户将网址设置为公开后，公开内容会进入平台公共展示范围，并可在首页、热门榜单或公开广场中被其他用户发现。若用户在使用过程中发现问题，可以通过反馈中心向管理员发送反馈，并在后续查看管理员回复。
+
+管理员治理流程以后台登录为起点。管理员进入后台后，可以先通过系统概览页了解当前平台运行情况，再根据管理任务进入用户管理、内容管理、分类维护、数据统计、操作日志或反馈管理等页面。对于异常用户，管理员可以进行禁用或删除；对于异常公开内容，管理员可以屏蔽或删除；对于用户反馈，管理员可以查看反馈详情并进行回复。这样的流程设计使普通用户的内容生产与管理员的内容治理形成相互衔接的闭环。
+
+\subsection{用例分析}
+根据系统角色与业务功能，可以将系统用例划分为游客用例、普通用户用例和管理员用例。游客主要完成首页浏览、注册和登录；普通用户主要完成个人收藏管理、分类管理、公开分享、榜单浏览和反馈提交；管理员主要完成用户治理、内容治理、分类维护、统计查看、日志审计和反馈处理。
+
+\begin{longtable}{p{2.3cm}p{3.2cm}p{7.5cm}}
+\caption{系统主要用例说明}
+\toprule
+角色 & 用例名称 & 用例说明 
+\midrule
+\endfirsthead
+\toprule
+角色 & 用例名称 & 用例说明 
+\midrule
+\endhead
+游客 & 浏览首页 & 在未登录状态下查看系统首页、平台介绍和登录注册入口 
+游客 & 用户注册 & 输入用户名、邮箱和密码，创建普通用户账号 
+游客 & 用户登录 & 输入账号和密码完成身份认证，进入个人空间 
+普通用户 & 管理收藏 & 新增、编辑、删除网址收藏，并设置描述、分类和公开状态 
+普通用户 & 管理分类 & 新增、编辑、删除个人分类，并通过层级结构组织收藏 
+普通用户 & 查看榜单 & 根据访问热度查看热门网址，发现高价值链接 
+普通用户 & 公开分享 & 将个人收藏设置为公开，使其他用户可以浏览和加入收藏 
+普通用户 & 提交反馈 & 向管理员提交问题、建议或体验反馈，并查看后续回复 
+管理员 & 用户管理 & 查看用户列表、账号状态和注册时间，对异常账号进行处理 
+管理员 & 内容管理 & 对公开网址进行筛选、屏蔽、删除和审核治理 
+管理员 & 分类维护 & 维护全局公共分类，保证平台分类结构清晰一致 
+管理员 & 数据统计 & 查看用户增长、收藏分布、访问量和排行榜数据 
+管理员 & 日志审计 & 查看用户登录、注册、修改资料和管理员操作等行为记录 
+管理员 & 反馈处理 & 查看用户反馈内容，回复用户问题并跟踪处理状态 
+\bottomrule
+\end{longtable}
+
+\subsection{数据需求分析}
+系统的数据需求来源于业务功能。用户注册登录需要保存账号、密码哈希、邮箱、头像、角色和状态等信息；网址收藏管理需要保存标题、URL、描述、图标、分类、访问量和公开状态；分类管理需要保存分类名称、父级分类、排序号和所属用户；公开广场和排行榜需要保存访问记录、点赞关系和关注关系；反馈管理需要保存反馈主题、联系方式、反馈内容、消息记录和已读状态；后台审计需要保存操作类型、目标对象、IP 地址和操作时间。
+
+数据设计不仅要满足当前功能，也要考虑后续扩展。例如，书签表中保留访问量、公开状态和审核状态字段，可以为排行榜和内容治理提供支持；分类表中保留父级编号，可以支持多级分类；反馈表与反馈消息表分离，可以支持多轮对话；日志表中保留目标类型和详情字段，可以适配不同业务模块的审计需求。通过这种面向扩展的数据需求分析，系统能够避免后期频繁大规模调整表结构。
+
+\subsection{业务规则分析}
+为了保证系统运行逻辑清晰，需要对主要业务规则进行约束。首先，普通用户只能修改和删除自己的收藏与分类，不能直接操作其他用户数据。其次，管理员拥有后台治理权限，但管理员账号本身不应被普通删除操作影响。再次，公开内容需要满足可访问、未屏蔽和未删除等条件，才能展示在公开广场或排行榜中。最后，反馈会话应保留历史消息，即使管理员侧进行软删除，也不应破坏用户侧已存在的沟通记录。
+
+\begin{table}[H]
+\centering
+\caption{系统核心业务规则}
+\begin{tabular}{p{3.2cm}p{9.2cm}}
+\toprule
+规则类别 & 规则内容 
+\midrule
+账号规则 & 用户名应具有唯一性；密码需满足基本长度要求；管理员账号需具备独立角色标识 
+权限规则 & 普通用户只能访问个人数据；管理员可以访问后台治理接口；游客只能访问公开页面 
+收藏规则 & 网址标题、URL 和所属用户为核心字段；公开收藏应支持访问量统计和状态控制 
+分类规则 & 分类支持父子层级；删除分类前需考虑其子分类和关联收藏的处理方式 
+公开规则 & 被屏蔽、删除或未公开的收藏不应出现在公开广场和热门榜单中 
+反馈规则 & 用户和管理员围绕同一主题进行多轮消息交流，消息记录应具备可追溯性 
+日志规则 & 关键操作应写入日志，便于后续进行安全审计和异常排查 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+\section{系统设计}
+
+\subsection{系统总体架构设计}
+本系统采用典型的四层架构：表现层、接口层、业务数据层和存储层。表现层由 Vue 3 前端承担，包括用户端布局和管理员布局；接口层由 Flask 蓝图组成，对外提供认证、书签、分类、用户、管理员和 AI 接口；业务数据层由 SQLAlchemy 模型与工具模块构成，实现业务规则、权限判断和数据封装；存储层则负责 MySQL 数据持久化与结构化存储。
+
+\begin{figure}[H]
+\centering
+\resizebox{0.96textwidth}{!}{
+\begin{tikzpicture}[node distance=0.42cm, every node/.style={font=\small}]
+  \node[layerbox, text width=10.8cm] (front) {textbf{表现层}Vue 3 + Vue Router + Pinia + Element Plus + ECharts用户端界面、管理员端界面、图表展示与交互控制};
+  \node[layerbox, text width=10.8cm, below=of front] (api) {textbf{接口层}Python Flask Blueprintsauth  bookmark  category  user  admin  ai};
+  \node[layerbox, text width=10.8cm, below=of api] (service) {textbf{业务与数据层}SQLAlchemy Models + Utils权限校验、书签抓取、反馈会话、兴趣分析、推荐逻辑};
+  \node[layerbox, text width=10.8cm, below=of service] (storage) {textbf{存储层}MySQL用户数据、书签数据、反馈消息与统计信息持久化};
+
+  \draw[line] (front) -- (api);
+  \draw[line] (api) -- (service);
+  \draw[line] (service) -- (storage);
+
+  \node[archbox, right=0.55cm of service, text width=2.2cm] (ai) {AI 服务分析与推荐};
+  \draw[line] (service.east) -- (ai.west);
+
+  \node[archbox, left=0.55cm of service, text width=2.2cm] (crawl) {网页抓取标题提取描述提取favicon 获取};
+  \draw[line] (crawl.east) -- (service.west);
+\end{tikzpicture}
+}
+\caption{系统总体架构图}
+\label{figarchitecture}
+\end{figure}
+
+\subsection{系统功能模块设计}
+按照用户视角与管理视角，系统可划分为以下模块：
+
+\begin{enumerate}[label=\arabic.]
+    \item 用户认证模块：负责注册、登录、JWT 鉴权和个人资料维护；
+    \item 书签管理模块：负责书签新增、自动抓取、编辑、删除、搜索与公开设置；
+    \item 分类管理模块：负责树形分类的组织、层级管理和书签归属统计；
+    \item 公开展示与社交模块：负责公开广场、公开主页、访问统计、排行榜、关注与点赞；
+    \item 管理后台模块：负责用户管理、内容审核、分类维护、日志记录与统计分析；
+    \item AI 增强模块：负责兴趣分析、关键词推荐、站点推荐、URL 安全评估和 AI 参数配置；
+    \item 反馈会话模块：负责用户提交问题、管理员回复、用户追问、状态追踪和消息记录。
+\end{enumerate}
+
+\subsection{数据库设计}
+系统数据库围绕“用户、书签、分类、行为记录、反馈会话、AI 配置”展开。用户与书签、分类之间构成一对多关系；分类实体通过 `parent_id` 实现树形层级；书签访问记录和操作日志分别服务于统计与审计；反馈主体与反馈消息形成一对多关系；用户关注关系和公开主页点赞关系体现了轻社交能力。
+
+\begin{figure}[H]
+\centering
+\resizebox{0.96textwidth}{!}{
+\begin{tikzpicture}[every node/.style={font=\small}]
+  \node[entity, minimum width=2.2cm] (user) at (0,4) {用户};
+  \node[entity, minimum width=2.2cm] (bookmark) at (5.5,4) {书签};
+  \node[entity, minimum width=2.2cm] (category) at (11,4) {分类};
+
+  \node[entity, minimum width=2.4cm] (feedback) at (1.2,1) {反馈主体};
+  \node[entity, minimum width=2.4cm] (message) at (5.5,1) {反馈消息};
+  \node[entity, minimum width=2.4cm] (interest) at (11,1) {兴趣画像};
+
+  \node[entity, minimum width=2.4cm] (social) at (0,-2) {社交关系};
+  \node[entity, minimum width=2.6cm] (visit) at (7.5,-2) {访问与日志};
+
+  \node[relation] (r1) at (2.75,4) {拥有};
+  \draw[thinline] (user.east) -- (r1.west);
+  \draw[thinline] (r1.east) -- (bookmark.west);
+  \node[font=\scriptsize] at (2.75,3.4) {1N};
+
+  \node[relation] (r2) at (8.25,4) {归属};
+  \draw[thinline] (bookmark.east) -- (r2.west);
+  \draw[thinline] (r2.east) -- (category.west);
+  \node[font=\scriptsize] at (8.25,3.4) {1N};
+
+  \node[relation] (r3) at (0.6,2.5) {提交};
+  \draw[thinline] (user.south) -- (r3.north);
+  \draw[thinline] (r3.south) -- (feedback.north);
+  \node[font=\scriptsize] at (-0.1,2.5) {1N};
+
+  \node[relation] (r4) at (3.35,1) {包含};
+  \draw[thinline] (feedback.east) -- (r4.west);
+  \draw[thinline] (r4.east) -- (message.west);
+  \node[font=\scriptsize] at (3.35,0.35) {1N};
+
+  \node[relation] (r5) at (7.5,1) {记录};
+  \draw[thinline] (bookmark.south east) -- (r5.north);
+  \draw[thinline] (r5.south) -- (visit.north);
+  \node[font=\scriptsize] at (8.2,1) {1N};
+
+  \node[relation] (r6) at (-1.8,1) {关联};
+  \draw[thinline] (user.south west) -- (r6.north);
+  \draw[thinline] (r6.south) -- (social.north west);
+  \node[font=\scriptsize] at (-2.5,1) {MN};
+
+  \node[relation] (r7) at (9.8,-0.5) {生成};
+  \draw[thinline] (visit.east) -- (r7.south);
+  \draw[thinline] (r7.north) -- (interest.south);
+  \node[font=\scriptsize] at (10.5,-0.5) {1N};
+
+  \draw[dashed,-{Latex[length=2mm]}] ($(category.east)+(0.2,0.15)$)
+    .. controls +(1.0,0.8) and +(1.0,-0.8) ..
+    ($(category.east)+(0.2,-0.15)$);
+  \node[font=\scriptsize] at (12.6,4) {父子层级};
+\end{tikzpicture}
+}
+\caption{系统 E-R 图}
+\label{figer}
+\end{figure}
+
+\subsection{关键表结构说明}
+
+\begin{table}[H]
+\centering
+\caption{用户表主要字段设计}
+\begin{tabular}{p{3cm}p{3cm}p{7cm}}
+\toprule
+字段名 & 类型 & 说明 
+\midrule
+id & Integer & 用户主键 
+username & String(80) & 用户名，唯一索引 
+nickname & String(80) & 昵称 
+password_hash & String(256) & 密码哈希值 
+email & String(120) & 电子邮箱 
+avatar & String(256) & 头像地址 
+role & String(20) & 角色，区分 useradmin 
+is_active & Boolean & 用户状态 
+created_at & DateTime & 创建时间 
+\bottomrule
+\end{tabular}
+\label{tabuser}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{书签表主要字段设计}
+\begin{tabular}{p{3cm}p{3cm}p{7cm}}
+\toprule
+字段名 & 类型 & 说明 
+\midrule
+id & Integer & 书签主键 
+title & String(256) & 书签标题 
+\url & String(1024) & 目标链接 
+description & Text & 描述信息 
+favicon & String(512) & 图标地址 
+user_id & Integer & 所属用户 
+category_id & Integer & 所属分类 
+is_public & Boolean & 是否公开 
+is_blocked & Boolean & 是否封禁 
+visits & Integer & 访问量 
+is_pending_review & Boolean & 是否待审核 
+created_at  updated_at & DateTime & 创建与更新时间 
+\bottomrule
+\end{tabular}
+\label{tabbookmark}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{分类表主要字段设计}
+\begin{tabular}{p{3cm}p{3cm}p{7cm}}
+\toprule
+字段名 & 类型 & 说明 
+\midrule
+id & Integer & 分类主键 
+name & String(100) & 分类名称 
+description & String(256) & 分类描述 
+parent_id & Integer & 父分类编号，实现树形结构 
+user_id & Integer & 所属用户 
+sort_order & Integer & 排序字段 
+created_at & DateTime & 创建时间 
+\bottomrule
+\end{tabular}
+\label{tabcategory}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{反馈表与反馈消息表主要字段设计}
+{\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{3.3cm}p{2.2cm}p{6.5cm}}
+\toprule
+字段名 & 类型 & 说明 
+\midrule
+\makecell[l]{texttt{feedbacks.id}} & Integer & 反馈主体编号 
+\makecell[l]{texttt{feedbacks.user_id}} & Integer & 反馈提交用户 
+\makecell[l]{texttt{feedbacks.subject}} & String(200) & 反馈主题 
+\makecell[l]{texttt{feedbacks.content}} & Text & 初始反馈内容 
+\makecell[l]{texttt{feedbacks.status}} & String(20) & 状态，如 pendingreplied 
+\makecell[l]{texttt{feedbacks.}texttt{is_read_by_user}} & Boolean & 用户是否已读管理员回复 
+\makecell[l]{texttt{feedbacks.}texttt{is_deleted_by_admin}} & Boolean & 管理员软删除标记 
+\makecell[l]{texttt{feedback_messages.}texttt{feedback_id}} & Integer & 所属反馈主体 
+\makecell[l]{texttt{feedback_messages.}texttt{sender_type}} & String(20) & 消息发送方类型 
+\makecell[l]{texttt{feedback_messages.}texttt{content}} & Text & 单条会话内容 
+\makecell[l]{texttt{feedback_messages.}texttt{created_at}} & DateTime & 发送时间 
+\bottomrule
+\end{tabular}
+}
+\label{tabfeedback}
+\end{table}
+
+\subsection{数据流与业务流程设计}
+从核心链路上看，用户在前端提交操作后，系统先经由 Axios 请求后端接口，随后由路由层完成认证判断，再进入相应业务逻辑和 ORM 数据访问层，最终写入 MySQL 数据库。对于 AI 功能，则在业务层额外向外部模型服务发起请求，再将结果回写数据库或返回前端展示。
+
+
+\subsection{前端页面结构设计}
+前端页面按照用户端和管理员端进行划分。用户端采用顶部导航栏布局，主要突出首页、个人中心、我的收藏、热门榜单、公开广场、分类管理、搜索页面和意见反馈等入口；管理员端采用左侧菜单栏布局，主要突出系统概览、用户管理、内容管理、分类维护、数据统计、操作日志、反馈管理、AI 设置和待处理审核等入口。两类布局在视觉风格上保持一致，但在信息密度和任务目标上有所区别。
+
+用户端页面更强调易用性和内容浏览体验，因此页面元素以卡片、表格、搜索框和分类导航为主。管理员端页面更强调管理效率，因此页面元素以数据表格、筛选框、统计图表、状态标签和操作按钮为主。通过这种差异化设计，系统既能满足普通用户的日常使用，也能满足管理员的集中治理需求。
+
+\begin{table}[H]
+\centering
+\caption{前端主要页面设计说明}
+\begin{tabular}{p{3cm}p{4cm}p{6cm}}
+\toprule
+页面类别 & 页面名称 & 主要设计内容 
+\midrule
+用户端 & 首页 & 展示平台入口、导航菜单、搜索区域和公开网址内容 
+用户端 & 登录注册 & 提供账号登录、用户注册和基础表单校验 
+用户端 & 个人中心 & 展示收藏总量、分类数量、公开收藏、关注人数和最近收藏 
+用户端 & 我的收藏 & 以表格形式管理个人收藏，支持分类筛选和公开开关 
+用户端 & 分类管理 & 以树形结构展示分类，支持新增、编辑、删除和排序 
+用户端 & 公开广场 & 展示公开用户和公开书签，支持关注、点赞和加入收藏 
+管理员端 & 系统概览 & 展示用户数、收藏数、分类数、屏蔽内容和趋势图表 
+管理员端 & 内容管理 & 管理全站公开收藏，支持搜索、筛选、屏蔽和删除 
+管理员端 & 数据统计 & 通过图表展示用户增长、分类分布和收藏排行 
+管理员端 & 操作日志 & 记录关键行为，支持按用户或操作类型筛选 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{后端接口设计}
+后端接口按照业务域进行拆分，每个业务域由独立蓝图进行管理。认证接口负责注册、登录和当前用户信息获取；书签接口负责个人收藏增删改查和公开状态切换；分类接口负责树形分类管理；公开接口负责公开广场、公开主页和热门榜单数据；管理员接口负责后台管理功能；反馈接口负责用户反馈和管理员回复；AI 接口负责智能分析与配置管理。
+
+\begin{longtable}{p{3.2cm}p{4cm}p{6cm}}
+\caption{系统主要接口设计说明}
+\toprule
+接口类别 & 典型接口 & 功能说明 
+\midrule
+\endfirsthead
+\toprule
+接口类别 & 典型接口 & 功能说明 
+\midrule
+\endhead
+认证接口 & apiauthregister & 用户注册，写入用户基础信息和密码哈希 
+认证接口 & apiauthlogin & 用户登录，校验账号密码并返回 JWT 令牌 
+用户接口 & apiuserprofile & 获取或修改当前用户资料 
+书签接口 & apibookmarks & 获取、新增、修改和删除个人收藏 
+分类接口 & apicategories & 获取和维护用户分类树结构 
+公开接口 & apipublicsquare & 获取公开广场、公开用户和公开书签数据 
+榜单接口 & apiranking & 根据访问量统计热门网址榜单 
+管理员接口 & apiadminusers & 管理员查看用户列表并处理异常账号 
+管理员接口 & apiadminbookmarks & 管理员审核、屏蔽和删除公开内容 
+日志接口 & apiadminlogs & 查询系统操作日志和行为轨迹 
+反馈接口 & apifeedbacks & 用户提交反馈，管理员查看和回复反馈 
+AI 接口 & apiaiconfig & 管理 AI 参数配置和智能分析功能 
+\bottomrule
+\end{longtable}
+
+\subsection{权限控制设计}
+权限控制贯穿系统前端和后端。前端通过路由守卫判断用户是否登录，当用户访问需要登录的页面时，如果本地不存在有效 token，则跳转到登录页面。管理员页面还需要额外判断当前用户角色，若角色不是管理员，则禁止进入后台页面。后端通过 JWT 装饰器保护接口，并在管理员接口中进行角色校验，避免用户通过直接构造请求绕过前端限制。
+
+权限控制设计采用“双层防护”的思想：前端守卫用于提升用户体验，及时阻止不符合条件的页面访问；后端鉴权用于保证真正的数据安全，即使用户绕过前端界面直接请求接口，也必须通过后端身份验证和角色验证。这样的设计符合前后端分离系统的安全要求。
+
+\subsection{异常处理设计}
+系统运行过程中可能出现多种异常情况，例如用户输入为空、URL 格式错误、账号密码错误、token 过期、数据库写入失败、AI 接口调用失败等。为提升系统健壮性，后端需要对常见异常进行统一捕获，并返回明确的错误信息；前端则根据错误信息进行弹窗提示或页面跳转。
+
+对于用户操作导致的异常，例如注册用户名重复、登录密码错误或新增分类名称为空，系统应返回可理解的提示，使用户能够自行修正。对于系统级异常，例如数据库连接失败、外部模型服务超时或接口返回格式不正确，系统应避免直接暴露底层错误细节，而是给出通用失败提示，并在服务器端记录日志，方便后续排查。通过这种分层处理方式，可以兼顾用户体验与系统安全。
+
+\begin{figure}[H]
+\centering
+\resizebox{0.98textwidth}{!}{
+\begin{tikzpicture}[every node/.style={font=\small}]
+  \node[flow] (user) at (0,0) {用户操作};
+  \node[flow] (front) at (3.0,0) {前端页面表单  按钮  路由};
+  \node[flow] (request) at (6.0,0) {Axios 请求};
+  \node[flow] (route) at (9.2,0) {Flask 路由Blueprint 分发};
+  \node[flow] (auth) at (12.3,0) {JWT 校验角色判断};
+  \node[flow] (logic) at (15.6,0) {业务处理抓取  统计  反馈};
+  \node[flow] (ai) at (15.6,2.2) {AI 服务分析与推荐};
+  \node[flow] (db) at (15.6,-2.2) {MySQL持久化存储};
+  \node[flow] (resp) at (10.9,-2.2) {结果封装JSON 返回};
+  \node[flow] (view) at (6.0,-2.2) {前端渲染列表  图表  会话};
+
+  \draw[line] (user) -- (front);
+  \draw[line] (front) -- (request);
+  \draw[line] (request) -- (route);
+  \draw[line] (route) -- (auth);
+  \draw[line] (auth) -- (logic);
+  \draw[line] (logic) -- (ai);
+  \draw[line] (logic) -- (db);
+  \draw[line] (logic.south) -- ++(0,-0.55) - (resp.north);
+  \draw[line] (resp) -- (view);
+  \draw[line] (request.south) -- (view.north);
+\end{tikzpicture}
+}
+\caption{系统核心业务流程图}
+\label{figflow}
+\end{figure}
+
+\clearpage
+\section{系统实现}
+
+\subsection{游客访问与首页模块实现}
+首页模块是用户进入系统后的第一入口，主要用于展示平台名称、系统定位、搜索入口以及公开网址内容。游客可以在不登录的情况下浏览基础首页，并通过登录或注册入口进入系统。该页面采用顶部导航栏与大面积视觉引导区相结合的方式，使系统功能入口清晰、页面层次明显。
+
+screenshotfig{首页.png}{0.88}{系统首页界面}
+
+\subsection{用户注册与登录模块实现}
+用户注册模块负责收集用户名、邮箱和密码信息，并完成基础格式校验。注册成功后，用户可通过登录页面输入账号和密码进入系统。登录成功后，后端签发 JWT 令牌，前端保存 token 与用户信息，并根据用户角色加载相应路由与菜单。
+
+screenshotfig{用户注册界面.png}{0.88}{用户注册界面}
+
+screenshotfig{用户登录界面.png}{0.88}{用户登录界面}
+
+\subsection{登录中转页与访问跳转实现}
+登录中转页主要用于连接用户认证流程与系统功能页面。当用户完成登录、注册或从受保护页面被拦截后重新登录时，系统需要根据用户身份、原始访问路径和角色权限进行页面跳转。若直接在登录成功后固定跳转到某一个页面，虽然实现简单，但无法兼顾用户实际操作场景。例如，普通用户可能原本希望进入“我的收藏”页面，管理员可能原本希望进入后台管理页面，若登录后统一跳回首页，会增加额外操作步骤。
+
+因此，系统在前端路由逻辑中引入中转处理思路：在用户未登录访问受限路由时，先记录目标地址；当用户完成登录并获得 token 后，再由中转页或路由守卫根据用户角色和目标路径进行判断。普通用户进入用户端页面，管理员进入后台页面，若目标地址不存在或权限不足，则跳转到默认首页或系统概览页。该设计能够提升登录流程的连贯性，也使权限控制逻辑更加清晰。
+
+中转页还承担短暂状态提示的作用。页面可以展示“正在进入系统”“正在加载个人空间”等提示信息，避免用户在登录成功后的接口请求阶段误以为系统卡顿。对于前后端分离系统而言，登录后通常还需要请求当前用户信息、权限菜单和未读反馈数量等数据，中转页能够为这些初始化操作提供缓冲空间。
+
+screenshotfig{中转页.png}{0.88}{登录中转页界面}
+
+\subsection{个人中心模块实现}
+个人中心用于集中展示用户的收藏总量、分类数量、公开收藏、关注人数、分类分布和最近收藏等数据。该页面一方面可以帮助用户快速了解个人收藏使用情况，另一方面也为系统的可视化统计和个性化推荐提供展示入口。
+
+screenshotfig{个人中心.png}{0.88}{用户个人中心界面}
+
+\subsection{书签管理模块实现}
+书签管理是系统的核心业务模块。用户在新增书签时可输入目标网址，系统调用抓取工具自动提取网页标题、描述和 favicon，减少重复录入。书签信息入库后，用户可以进行编辑、删除、分类归属调整和公开状态切换。为保证公开内容质量，系统为书签设计了待审核、封禁等治理字段，便于管理员在后台统一处理公开内容。
+
+screenshotfig{用户书签管理页面.png}{0.88}{用户书签管理页面}
+
+\subsection{分类管理模块实现}
+分类模块采用自关联结构设计，通过 `parent_id` 实现父子分类层级。模型中递归提供了获取后代分类编号的方法，可用于统计某一分类树下的书签数量。前端页面中，分类以树结构展示，用户可根据内容组织习惯对分类进行增删改查与层级调整。相比平铺标签结构，树形分类更适用于知识资源的分层管理。
+
+screenshotfig{分类管理.png}{0.88}{用户分类管理界面}
+
+\subsection{热门榜单模块实现}
+热门榜单模块根据网站访问量、日榜、周榜和月榜等维度展示访问热度较高的网址。该模块能够帮助用户快速发现常用或高价值的公开站点，同时也为系统的行为统计功能提供直观体现。
+
+screenshotfig{热门榜单.png}{0.88}{热门榜单界面}
+
+\subsection{公开广场模块实现}
+公开广场用于展示用户主动公开的网址资源。平台提供按访问热度、用户热度和公开用户等方式组织内容，用户可以查看其他用户的公开书签，也可以将感兴趣的网址加入自己的收藏。公开广场使系统从个人收藏工具扩展为具有轻社交属性的网址分享平台。
+
+screenshotfig{公开广场.png}{0.88}{公开广场用户列表界面}
+
+screenshotfig{公开广场2.png}{0.88}{公开用户书签展示界面}
+
+\subsection{会话式反馈模块实现}
+反馈模块是本系统相较普通收藏管理系统的重要创新点。传统反馈往往仅支持用户提交单条问题，管理员在后台处理后，用户难以及时追踪结果，也无法继续围绕同一问题补充说明。为此，本文设计了“反馈主体 + 反馈消息记录”双表结构。
+
+在该结构中，`feedbacks` 表用于维护主题、状态、读写标记和软删除标记，`feedback_messages` 表用于保存每一轮消息内容、发送时间以及发送方身份。用户首次提交反馈时，系统同时创建一条反馈主体记录与首条用户消息；管理员回复时，系统新增一条管理员消息并更新状态；用户可在反馈中心查看历史会话并继续回信，从而形成完整的多轮交流过程。
+
+screenshotfig{会话式反馈功能界面.png}{0.88}{会话式反馈功能界面}
+
+\subsection{管理员后台总体实现}
+管理员后台承担系统治理职责，采用左侧导航栏和右侧内容区的布局形式，集中管理系统概览、用户管理、内容管理、分类维护、数据统计、操作日志、反馈管理、AI 设置和待处理审核等功能。后台界面风格统一，适合管理员快速定位不同管理任务。
+
+screenshotfig{管理员后台功能界面.png}{0.88}{管理员后台功能界面}
+
+\subsection{管理员系统概览实现}
+系统概览页用于集中展示平台注册用户数、收藏总量、分类总数、已屏蔽内容以及运营状态等信息，同时通过图表展示近期用户增长和收藏分类分布情况。该页面帮助管理员快速掌握平台整体运行情况。
+
+screenshotfig{管理员-系统概览.png}{0.88}{管理员系统概览界面}
+
+\subsection{管理员用户管理实现}
+用户管理模块用于查看用户列表、账号状态、角色、收藏数量和注册时间等信息。管理员可以对异常账号进行禁用或删除操作，从而维护平台的用户秩序与安全性。
+
+screenshotfig{管理员-用户管理.png}{0.88}{管理员用户管理界面}
+
+\subsection{管理员内容管理实现}
+内容管理模块用于筛选、审核和维护全站公开收藏内容。管理员可以根据状态或关键词搜索网址记录，并对异常链接进行屏蔽或删除。该模块是平台公开内容治理的重要组成部分。
+
+screenshotfig{管理员-内容管理.png}{0.88}{管理员内容管理界面}
+
+\subsection{管理员全局分类维护实现}
+全局分类维护模块用于统一维护公共分类结构与分类归属，保证内容组织清晰一致。管理员可以新增分类、添加网页、编辑分类或删除分类，从而形成统一的平台分类体系。
+
+screenshotfig{管理员-全局分类维护.png}{0.88}{管理员全局分类维护界面}
+
+\subsection{管理员数据统计实现}
+数据统计模块通过折线图、柱状图和环形图展示用户增长趋势、热门收藏分类、分类分布和收藏排行等信息。通过可视化统计，管理员能够更直观地分析平台内容结构与用户使用情况。该页面对应系统后台的数据统计功能，是管理员掌握平台运行情况的重要依据。
+
+screenshotfig{管理员-数据统计.png}{0.88}{管理员数据统计界面}
+
+
+\subsection{管理员操作日志实现}
+操作日志模块用于记录用户登录、注册、修改资料、管理员操作等行为轨迹。通过日志审计，管理员可以追踪系统异常操作，辅助进行安全管理和问题排查。
+
+screenshotfig{管理员-操作日志.png}{0.88}{管理员操作日志审计界面}
+
+\subsection{管理员反馈管理实现}
+反馈管理模块用于查看用户提交的反馈主题、联系方式、状态、更新时间和消息数量。管理员可以集中处理用户反馈，并通过会话式回复机制持续跟踪问题进展。
+
+screenshotfig{管理员-反馈管理.png}{0.88}{管理员反馈管理界面}
+
+\subsection{管理员待处理审核实现}
+待处理审核模块用于集中展示公开申请与首页推荐审核内容。当暂无待审核内容时，系统显示空状态提示。该模块保证公开内容上线前能够经过管理员确认，提高平台内容质量。
+
+screenshotfig{管理员-待处理审核.png}{0.88}{管理员待处理审核界面}
+
+
+\subsection{系统界面覆盖情况说明}
+本文在系统实现部分按照普通用户端与管理员端两个维度对主要功能界面进行了展示。普通用户端包含首页、注册、登录、个人中心、我的收藏、分类管理、热门榜单、公开广场、公开用户主页以及会话式反馈等界面；管理员端包含后台首页、系统概览、用户管理、内容管理、全局分类维护、数据统计、操作日志、反馈管理和待处理审核等界面。上述界面覆盖了系统从用户访问、账号认证、资源收藏、分类组织、公开传播、反馈沟通到后台治理的完整业务流程，能够较为直观地体现平台的功能完整性与实际运行效果。
+
+从界面结构上看，用户端主要采用顶部导航栏布局，强调网址收藏、分类浏览和公开发现等常用操作的便捷性；管理员端主要采用侧边栏布局，便于管理人员在不同治理模块之间快速切换。两类界面在视觉风格上保持统一，均采用卡片式内容区域、圆角边框、浅色背景和分区式信息展示，从而提高了系统整体的一致性和可读性。通过这些截图可以看出，平台不仅完成了后端业务逻辑和数据库持久化设计，也具备较完整的前端页面呈现能力，满足毕业设计对系统实现效果展示的要求。
+
+
+
+\subsection{搜索功能模块实现}
+搜索功能用于解决用户收藏数量增加后查找效率下降的问题。当前项目中，搜索主要由两个入口组成：其一是独立的搜索页面，用于检索当前登录用户自己的收藏记录；其二是首页的站内搜索入口，用于在公开内容范围内按照关键词进行筛选展示。与分类浏览相比，搜索功能更适合用户在明确知道目标关键词时快速定位内容。
+
+在实现过程中，前端负责收集搜索关键词并发送请求，后端根据关键词构造查询条件。为了避免空关键词造成无意义查询，系统在前端与后端均进行了空值判断。独立搜索页面通过后端接口对当前用户的书签标题、描述和 URL 进行模糊匹配；首页站内搜索则结合公开广场的数据加载逻辑，对公开内容进行关键词筛选。这样的设计虽然尚未形成真正意义上的全站统一检索，但已经能够较好满足当前项目中“个人收藏查找”和“公开内容发现”两类核心场景。
+
+从交互设计角度看，搜索结果不仅要返回匹配内容，还应当让用户理解结果来源。因此，页面在展示结果时应同时呈现标题、网址、分类、描述和访问入口，使用户能够快速判断该结果是否为目标内容。对于首页公开内容筛选，结果中还可以展示发布者或公开来源；对于个人收藏搜索，系统则提供直接访问、加入收藏或后续编辑管理等操作。这样既保证搜索结果的可读性，又能减少用户在不同页面之间反复切换。
+
+从后端实现角度看，搜索接口需要对关键词进行基础清洗，例如去除首尾空格、限制最大长度、过滤明显异常输入等。数据库查询目前主要采用标题、描述和 URL 的模糊匹配；当后续数据规模增大时，可以进一步引入全文索引或搜索引擎，以提升复杂关键词检索效率。当前系统采用常规数据库查询与前端筛选结合的方式，能够满足毕业设计与中小规模使用场景的需求。
+
+screenshotfig{全局搜索.png}{0.88}{全局搜索结果界面}
+
+\subsection{访问统计与排行榜实现}
+访问统计模块负责记录用户访问公开网址的行为。当用户点击公开网址或从热门榜单进入某一站点时，系统会更新对应书签的访问量，并可记录访问时间、访问用户和 IP 地址等信息。排行榜模块则在访问统计的基础上，按照日榜、周榜和月榜等不同时间维度对网址进行排序。
+
+排行榜的实现能够提高公开内容的流动性，使高频访问的网址获得更多展示机会。对于用户而言，热门榜单可以作为发现工具站点和常用资源的入口；对于管理员而言，访问数据可以反映平台内容的整体使用情况。后续如果继续扩展，还可以结合分类、用户兴趣和访问时段进行更细粒度的统计分析。
+
+\subsection{公开主页与社交互动实现}
+公开主页用于展示某一用户主动公开的网址资源。其他用户可以通过公开广场进入该用户的公开主页，按分类查看对方分享的收藏内容，并将感兴趣的网址加入自己的收藏。系统还提供关注和点赞功能，用于形成轻量级社交关系。
+
+与传统收藏夹相比，公开主页使网址收藏不再只是个人私有数据，而是可以转化为可分享、可传播的资源集合。对于学习类、工具类和技术类网址，公开主页能够帮助用户沉淀个人知识库，也能够使其他用户通过浏览公开内容获得参考。关注功能则为后续持续订阅他人公开更新提供了基础。
+
+\subsection{后台内容治理实现}
+后台内容治理主要由内容管理、待处理审核和操作日志等模块共同完成。内容管理模块可以查看公开网址列表，并根据状态、标题或 URL 进行筛选；待处理审核模块用于集中处理需要管理员确认的公开申请或推荐内容；操作日志模块则记录关键行为，便于追踪异常操作。
+
+内容治理的核心目标是保证公开空间中的网址资源具有基本质量。由于用户提交的网址具有开放性，如果缺少后台治理机制，可能会出现无效链接、重复链接或不适合公开展示的内容。系统通过“用户提交、系统记录、管理员处理、日志留痕”的流程，使公开内容管理具备可追溯性。
+
+\subsection{AI 设置与智能辅助实现}
+AI 设置模块用于维护外部模型服务相关参数，例如 API 地址、密钥、模型名称和启用状态等。管理员可以根据实际情况调整 AI 服务配置，从而避免将参数写死在代码中。智能辅助功能主要围绕网址标题、描述和用户收藏行为展开，可用于生成关键词、分析兴趣标签或辅助判断 URL 风险。
+
+由于外部 AI 服务存在网络延迟、调用失败或返回格式不稳定等情况，系统在实现时需要进行容错处理。例如，当 AI 服务未启用时，系统应允许基础收藏功能正常使用；当模型返回内容无法解析时，后端应返回明确错误信息而不是导致页面崩溃。通过这种松耦合设计，AI 模块可以作为增强功能存在，而不会影响系统核心业务运行。
+
+在具体使用过程中，AI 分析展示页可以将用户收藏的网址内容转化为更直观的兴趣结果。例如，系统可以读取用户近期收藏的网址标题、分类和描述信息，汇总后发送给 AI 服务，由模型提取用户可能关注的主题方向。前端再将返回结果以标签、说明文本或推荐列表的形式展示给用户。相比单纯依靠人工分类，AI 分析能够从收藏内容中提炼潜在兴趣，有助于提升系统的智能化程度。
+
+AI 功能还可以服务于管理员治理场景。对于公开网址，系统可以让模型辅助判断链接描述是否清晰、内容是否与分类匹配、是否存在明显风险提示等。管理员仍然保留最终审核权，AI 只作为辅助参考。这样的设计既避免了完全依赖模型造成误判，也能够提高管理员处理大量公开内容时的效率。
+
+screenshotfig{AI分析展示.png}{0.88}{AI 分析展示界面}
+
+\subsection{系统部署与运行实现}
+系统部署时需要分别处理前端静态资源、后端 Flask 服务和 MySQL 数据库。前端项目在开发完成后可以通过构建命令生成静态文件，再由 Web 服务器进行托管；后端服务可以通过 Python 虚拟环境安装依赖，并使用生产级运行方式启动；数据库需要提前创建对应库和用户，并保证后端配置中的连接字符串正确。
+
+在部署过程中，还需要注意跨域配置、静态资源路径、环境变量和日志目录等问题。开发环境中前端和后端通常运行在不同端口，因此需要开启 CORS；生产环境中可以通过反向代理将前端页面和后端接口统一到同一域名下，以减少跨域问题。系统部署完成后，应优先测试登录、收藏新增、分类管理、公开展示和后台管理等关键路径，确保基础业务能够稳定运行。
+
+\subsection{数据库实现}
+系统数据库采用 MySQL 进行统一管理。后端通过 Flask-SQLAlchemy 建立模型映射关系，将用户信息、书签内容、分类结构、访问记录、反馈会话和兴趣画像等业务数据进行结构化存储。该方案既能够满足课程项目对稳定性的要求，也便于后续继续扩展统计分析、内容治理和个性化推荐等功能。
+
+\clearpage
+\section{系统测试}
+
+\subsection{测试目的}
+系统测试的主要目的是验证各功能模块是否满足设计需求，检查用户端、管理员端与后端接口之间的协同逻辑是否正确，评估系统在典型操作场景下的稳定性与可用性，并尽可能提前暴露权限控制、数据一致性和消息交互方面的问题。
+
+\subsection{测试环境}
+\begin{table}[H]
+\centering
+\caption{系统测试环境}
+\begin{tabular}{p{4cm}p{8cm}}
+\toprule
+测试项 & 环境说明 
+\midrule
+操作系统 & Windows 开发环境 
+前端框架 & Vue 3 + Vite 
+后端框架 & Python Flask 
+数据库 & MySQL 
+浏览器 & Chrome  Edge 现代浏览器 
+接口测试方式 & 页面联调 + 接口调用验证 
+单元测试 & Python unittest 
+\bottomrule
+\end{tabular}
+\label{tabtest-env}
+\end{table}
+
+\subsection{测试方法}
+本文主要采用黑盒测试与少量单元测试相结合的方式。黑盒测试主要从业务功能视角验证输入、处理和输出是否符合预期；单元测试则针对后端工具函数中的关键逻辑进行验证，例如真实客户端 IP 提取逻辑，以保证系统在代理部署场景下的日志与安全判断更加可靠。
+
+\subsection{功能测试用例}
+
+\begin{longtable}{p{1.2cm}p{3cm}p{4.5cm}p{4.5cm}}
+\caption{系统主要功能测试用例}
+\toprule
+编号 & 测试功能 & 测试内容 & 预期结果 
+\midrule
+\endfirsthead
+\toprule
+编号 & 测试功能 & 测试内容 & 预期结果 
+\midrule
+\endhead
+T1 & 用户注册登录 & 输入合法用户信息完成注册并登录系统 & 注册成功，登录后获得 token 并进入个人中心 
+T2 & 路由权限控制 & 未登录用户直接访问书签页或后台页 & 系统自动跳转至登录页或首页，禁止越权访问 
+T3 & 书签新增 & 输入合法 URL，新建书签并自动抓取网页信息 & 书签保存成功，标题和描述自动补全 
+T4 & 书签分类管理 & 将书签归入指定分类并调整分类层级 & 分类树正常更新，书签数量统计正确 
+T5 & 公开展示 & 将书签设置为公开，由其他用户访问 & 可在公开广场中展示，访问量发生变化 
+T6 & 社交互动 & 关注公开用户并点赞主页 & 关注关系和点赞状态更新成功 
+T7 & 反馈提交 & 用户提交一条新反馈 & 后端生成反馈主体和首条反馈消息 
+T8 & 管理员回复 & 管理员在后台回复用户反馈 & 用户端显示会话内容，会话中新增管理员消息 
+T9 & 用户回信 & 用户在反馈中心继续回复 & 状态更新为待处理，管理员端可看到新消息 
+T10 & 内容管理 & 管理员筛选公开收藏并执行屏蔽或删除 & 内容状态正常更新 
+T11 & 数据统计 & 管理员查看统计图表与排行榜 & 图表能够正常渲染，数据与数据库记录一致 
+T12 & 数据库持久化 & 执行新增、修改、查询等典型数据库操作 & 数据能够正确写入并稳定读取 
+T13 & 搜索功能 & 输入标题、描述或 URL 关键词进行检索 & 能够返回匹配结果并正常跳转 
+T14 & 登录中转 & 登录后根据用户角色和原访问路径跳转 & 普通用户与管理员进入对应页面 
+T15 & AI 分析 & 对用户收藏内容执行智能分析 & 页面展示兴趣标签或分析结果 
+\bottomrule
+\end{longtable}
+
+
+
+\subsection{测试过程说明}
+测试过程中首先对用户端基础流程进行验证，包括游客访问首页、用户注册、用户登录、进入个人中心、新增收藏、创建分类、设置公开状态和查看热门榜单等。该部分测试重点关注用户是否能够顺利完成从账号创建到内容管理的完整流程。随后对公开广场和公开主页进行验证，检查公开内容是否能够被其他用户访问，访问量、点赞和关注状态是否能够正确更新。
+
+针对本次新增展示的中转页、搜索功能和 AI 分析功能，测试时分别设置了对应场景。中转页测试重点观察登录完成后的跳转路径是否正确，尤其是从受保护页面跳转到登录页再返回原页面的过程；搜索功能测试重点观察搜索页面与首页站内搜索在不同关键词输入下的结果是否合理、空关键词是否被拦截、结果列表是否能够正常进入访问地址；AI 分析测试重点观察服务开启与关闭两种情况下页面反馈是否合理，避免外部服务异常影响基础收藏功能。
+
+管理员端测试主要围绕后台治理流程展开。测试人员以管理员身份登录后台后，依次检查系统概览、用户管理、内容管理、全局分类维护、数据统计、操作日志、反馈管理和待处理审核等页面。对于表格类页面，重点测试搜索、筛选、删除、屏蔽和状态显示是否正常；对于图表类页面，重点测试数据是否能够正常加载并渲染；对于反馈类页面，重点测试用户提交反馈后管理员是否能够查看并回复。
+
+\subsection{兼容性测试}
+兼容性测试主要验证系统在常见浏览器中的展示效果和交互行为。由于系统前端采用 Vue 3 和 Element Plus，整体对现代浏览器支持较好。测试过程中分别在 Chrome 和 Edge 浏览器中访问用户端与管理员端页面，重点观察导航栏、表格、弹窗、表单、图表和图片展示是否存在明显错位。
+
+测试结果表明，系统主要页面在现代浏览器中能够正常显示，表单输入、按钮点击、弹窗确认和页面跳转等交互均可正常执行。由于部分页面包含较宽的表格和较多统计信息，在小屏幕环境下可能需要横向空间或响应式优化。后续可进一步针对移动端适配进行改进，例如将后台表格改为卡片式展示，或对用户端公开广场进行更细粒度的响应式布局。
+
+\subsection{安全性测试}
+安全性测试主要从身份认证、权限控制和异常操作三个方面进行。身份认证测试包括未登录访问受保护页面、登录后访问个人页面、token 过期后重新访问接口等场景。权限控制测试包括普通用户尝试访问管理员页面、普通用户尝试修改他人收藏、管理员处理公开内容等场景。异常操作测试包括输入空用户名、错误密码、非法 URL 和重复分类名称等。
+
+通过测试可以看出，系统能够对未登录用户进行拦截，并能够区分普通用户和管理员权限。对于常见表单错误，前端或后端能够给出提示。对于需要管理员权限的接口，后端角色校验是必要的，因为仅依靠前端路由守卫无法防止恶意请求。该测试说明系统已经具备基础安全控制能力，但在生产环境中仍应进一步加强接口限流、敏感操作二次确认和日志告警等机制。
+
+\subsection{性能与可用性分析}
+从当前项目规模来看，系统主要面向课程设计和中小规模使用场景，数据量相对有限，因此常规查询、表格分页和图表统计均能够满足预期使用需求。随着用户数量和收藏数量增加，系统可能在搜索功能、排行榜统计和日志查询等方面面临性能压力。针对这些问题，后续可以通过数据库索引、分页查询、缓存热门榜单和异步统计等方式进行优化。
+
+可用性方面，系统整体采用统一的蓝白色界面风格，用户端页面入口清晰，管理员端菜单结构完整。个人中心、我的收藏、分类管理和公开广场等页面均围绕用户常用操作展开；后台系统概览、内容管理和数据统计等页面能够较好地满足管理员的日常治理需求。系统仍可继续优化的方向包括：减少部分页面的信息密度、增强空状态提示、增加批量操作确认、优化移动端显示效果等。
+
+\subsection{测试结论}
+结合功能验证、兼容性测试、安全性测试、可用性分析以及少量后端单元测试结果可以看出，系统已基本达到设计目标。用户端在手工测试场景下能够完成从注册登录到收藏管理、分类管理、公开分享和反馈提交的主要流程；管理员端能够完成系统概览、用户管理、内容管理、分类维护、数据统计、日志审计和反馈处理等核心任务；现有后端单元测试则对真实客户端 IP 提取等基础逻辑进行了补充验证。
+
+测试也暴露出一些可以继续优化的问题。例如，当图片资源较多或统计图表较复杂时，页面加载速度仍有优化空间；AI 功能依赖外部接口，调用稳定性受网络和服务状态影响；部分后台表格在小屏幕上显示不够紧凑。上述问题不影响系统核心功能运行，但可以作为后续迭代优化的重点。
+
+\subsection{测试结果分析}
+从当前测试结果来看，系统主要功能整体运行正常。认证模块可以实现基本的登录鉴权与权限跳转；书签与分类模块能够完成信息录入、组织和展示；公开模块与社交模块可以支持访问统计和用户互动；会话式反馈模块可以形成用户与管理员之间的闭环沟通。需要说明的是，当前自动化测试覆盖范围仍然较有限，现阶段的结论主要建立在页面功能验证、典型业务场景检查以及少量后端单元测试基础之上。
+
+当然，系统仍存在进一步完善空间。例如，AI 接口结果受外部模型服务稳定性影响较大，推荐结果的质量也与提示词设计密切相关；统计分析维度目前仍偏向基础访问量与关系数量，尚未形成更丰富的行为画像模型；反馈模块虽然实现了站内会话，但暂未联动邮件或即时消息通知渠道。
+
+\clearpage
+\section{结论}
+
+\subsection{研究总结}
+本文围绕在线网址收藏管理场景，设计并实现了一套基于 Python Flask 的前后端分离 Web 平台。系统在传统网址收藏、分类与检索的基础上，扩展了公开展示、热门榜单、轻社交、行为统计、后台治理、AI 智能增强以及会话式反馈等能力，形成了较为完整的业务闭环。
+
+从工程实现角度看，系统前端结构清晰，后端模块边界明确，数据库设计较完整。尤其是反馈模块采用“主体 + 消息流”的设计，有效弥补了传统反馈系统单向提交、不可追踪的问题，使平台具备更强的交互性和服务闭环能力。
+
+\subsection{存在不足}
+尽管系统已经实现了主要功能，但仍然存在以下不足：
+
+\begin{enumerate}[label=\arabic.]
+    \item AI 能力依赖外部接口，存在成本、时延与稳定性不确定性；
+    \item 搜索能力仍以常规业务检索为主，尚未引入全文索引机制；
+    \item 推荐与统计分析更多停留在基础层面，用户画像深度仍有限；
+    \item 反馈模块目前主要依赖站内会话，缺乏更及时的消息提醒方式；
+    \item 前端部分历史文件存在编码痕迹，后续需要统一工程规范与字符集。
+\end{enumerate}
+
+\subsection{未来展望}
+未来可在以下几个方向继续完善系统：
+
+\begin{enumerate}[label=\arabic.]
+    \item 引入全文检索或向量检索，提高复杂条件下的搜索效率；
+    \item 优化 AI 提示词与推荐策略，增强兴趣标签与站点推荐质量；
+    \item 建立更细粒度的权限模型与异常行为审计机制；
+    \item 将反馈会话拓展为邮件、短信或微信等多通道提醒机制；
+    \item 结合用户访问历史构建更完整的个性化推荐与可视化分析体系；
+    \item 进一步完善登录中转、搜索功能和 AI 分析结果的联动，使用户从检索、收藏到智能推荐形成更顺畅的使用闭环。
+\end{enumerate}
+
+总体而言，本文完成的在线网址收藏管理平台已具备较好的工程基础和应用扩展潜力，可为后续同类信息管理系统的开发提供一定参考。
+
+\clearpage
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{-5}\songti 参考文献}
+\cfoot{\thepage}
+begingroup
+\zihao{-5}
+setstretch{1.25}
+\begin{thebibliography}{99}
+
+\bibitem{dbbook}
+王珊, 萨师煊. 数据库系统概论[M]. 第6版. 北京 高等教育出版社, 2022.
+
+\bibitem{webdev}
+方巍. Python Web开发从入门到精通[M]. 北京 清华大学出版社, 2020.
+
+\bibitem{vuebook}
+梁灏. Vue.js实战[M]. 北京 清华大学出版社, 2018.
+
+\bibitem{softeng}
+张海藩, 牟永敏. 软件工程导论[M]. 第6版. 北京 清华大学出版社, 2013.
+
+\bibitem{flaskbook}
+Grinberg M. Flask Web Development Developing Web Applications with Python[M]. 2nd ed. Sebastopol O'Reilly Media, 2018.
+
+\bibitem{flaskdocs}
+Pallets. Flask Documentation (3.1.x)[EB/OL]. (2024-12-01)[2026-04-28]. url{httpsflask.palletsprojects.com}.
+
+\bibitem{flasksa}
+Pallets Ecosystem. Flask-SQLAlchemy Documentation (3.1.x)[EB/OL]. (2024-09-15)[2026-04-28]. url{httpsflask-sqlalchemy.readthedocs.ioenstable}.
+
+\bibitem{flaskjwt}
+Flask-JWT-Extended Contributors. Flask-JWT-Extended Documentation (4.7.1)[EB/OL]. (2024-06-20)[2026-04-28]. url{httpsflask-jwt-extended.readthedocs.io}.
+
+\bibitem{sqlalchemy}
+Bayer M. SQLAlchemy Documentation[EB/OL]. (2025-01-10)[2026-04-28]. url{httpsdocs.sqlalchemy.org}.
+
+\bibitem{vue}
+You E. Vue.js --- The Progressive JavaScript Framework[EB/OL]. (2024-12-20)[2026-04-28]. url{httpsvuejs.org}.
+
+\bibitem{vuerouter}
+Vue Router Contributors. Vue Router Documentation[EB/OL]. (2024-11-05)[2026-04-28]. url{httpsrouter.vuejs.org}.
+
+\bibitem{elementplus}
+Element Plus Team. Element Plus A Vue 3 Based Component Library[EB/OL]. (2024-12-10)[2026-04-28]. url{httpselement-plus.org}.
+
+\bibitem{echarts}
+Apache Software Foundation. Apache ECharts Documentation[EB/OL]. (2024-08-22)[2026-04-28]. url{httpsecharts.apache.org}.
+
+\bibitem{jwt}
+Jones M, Bradley J, Sakimura N. JSON Web Token (JWT)[S/OL]. RFC 7519. (2015-05)[2026-04-28]. url{httpswww.rfc-editor.orgrfcrfc7519}.
+
+\bibitem{rest}
+Fielding R T. Architectural Styles and the Design of Network-based Software Architectures[D]. Irvine University of California, 2000.
+
+\bibitem{mysqlbook}
+Schwartz B, Zaitsev P, Tkachenko V. High Performance MySQL Optimization, Backups, and Replication[M]. 3rd ed. Sebastopol O'Reilly Media, 2012.
+
+\bibitem{mysqldocs}
+Oracle Corporation. MySQL 8.4 Reference Manual[EB/OL]. (2024-11-01)[2026-04-28]. url{httpsdev.mysql.comdocrefman8.4en}.
+
+\bibitem{uml}
+Booch G, Rumbaugh J, Jacobson I. The Unified Modeling Language User Guide[M]. 2nd ed. Boston Addison-Wesley Professional, 2005.
+
+\end{thebibliography}
+endgroup
+
+\clearpage
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{\thepage}
+\section{致谢}
+在本次毕业设计与论文撰写过程中，我得到了许多老师、同学和家人的帮助与支持。在此谨向所有关心、指导和帮助过我的人表示诚挚的感谢。
+
+首先，衷心感谢指导教师在选题确定、系统设计、论文撰写和细节修改过程中给予的耐心指导。老师严谨的治学态度和认真负责的工作作风，使我在项目开发与论文写作过程中受益匪浅。
+
+其次，感谢学院提供良好的学习与实验环境，感谢同学们在技术交流、系统测试和思路讨论方面给予的帮助。正是在不断交流与反复修改中，本课题才得以逐步完善。
+
+最后，感谢家人在学习期间给予的理解、鼓励与支持，使我能够顺利完成本次毕业设计。由于时间和个人能力所限，论文中仍难免存在不足，恳请各位老师批评指正。
+
+\end{document}

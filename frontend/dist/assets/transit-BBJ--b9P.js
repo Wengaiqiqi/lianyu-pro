@@ -1,0 +1,1 @@
+function i(n){const t=`#/go/${n}`;return typeof window>"u"?t:`${window.location.origin}${window.location.pathname}${window.location.search}${t}`}function o(n){return n?/^https?:\/\//i.test(n)?n:`https://${n}`:""}export{i as c,o as n};
