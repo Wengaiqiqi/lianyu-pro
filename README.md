@@ -1,6 +1,6 @@
 # 链域 Lianyu Pro
 
-[▶ 播放产品演示视频](./lianyu.mp4)
+https://github.com/user-attachments/assets/5d764f06-99a5-4819-a7ea-b1c76aa11923
 
 一个基于 Vue 3 + Flask 的书签管理与网址导航系统。项目围绕“个人收藏管理 + 公共网址广场 + 管理后台”构建，支持用户注册登录、书签分类、公开分享、热门排行、全局搜索、反馈会话、AI 兴趣分析与后台内容审核。
 
